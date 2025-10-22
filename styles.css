@@ -188,6 +188,18 @@ body {
   border-radius: 10px
 }
 
+#history-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+#history-stat:focus {
+  outline: 2px solid rgba(124,92,255,0.14);
+  outline-offset: 3px;
+}
+
 .finished {
   opacity: 0.65;
   text-decoration: line-through
