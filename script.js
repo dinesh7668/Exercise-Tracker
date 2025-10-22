@@ -330,17 +330,17 @@ function closeHistoryPanel(){
   panel.classList.remove('open')
   panel.setAttribute('aria-hidden','true')
   const toggle = document.getElementById('history-toggle')
-  if(toggle) toggle.setAttribute('aria-expanded','false')
+  const histStat = document.getElementById('history-stat')
+  if(histStat) histStat.setAttribute('aria-expanded','false')
 }
 
-const historyToggle = document.getElementById('history-toggle')
-if(historyToggle){
-  historyToggle.addEventListener('click', ()=>{
-    const expanded = historyToggle.getAttribute('aria-expanded') === 'true'
-    historyToggle.setAttribute('aria-expanded', String(!expanded))
+const historyStat = document.getElementById('history-stat')
+if(historyStat){
+  const activate = ()=>{
+    const expanded = historyStat.getAttribute('aria-expanded') === 'true'
+    historyStat.setAttribute('aria-expanded', String(!expanded))
     let panel = document.getElementById('history-panel')
     if(!panel){ renderHistoryPanel(); panel = document.getElementById('history-panel') }
-    const anchor = document.getElementById('history-stat')
     if(!expanded){
       // Create overlay that blurs backdrop and closes on click
       let overlay = document.getElementById('history-overlay')
@@ -367,5 +367,10 @@ if(historyToggle){
       panel.classList.remove('open')
       panel.setAttribute('aria-hidden','true')
     }
+  }
+
+  historyStat.addEventListener('click', activate)
+  historyStat.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate() }
   })
 }
