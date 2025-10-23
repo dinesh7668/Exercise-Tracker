@@ -135,7 +135,35 @@ form.addEventListener('submit', e => {
 
 // init
 exercises = load()
+
+// Purge any exercises that are not from today (keep only today's exercises)
+function isSameDay(tsA, tsB){
+  const a = new Date(tsA); const b = new Date(tsB)
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
+}
+
+function purgeOldExercises(){
+  const now = Date.now()
+  const before = exercises.length
+  exercises = exercises.filter(item => item.createdAt && isSameDay(item.createdAt, now))
+  if(exercises.length !== before){
+    save()
+    render()
+  }
+}
+
+purgeOldExercises()
 render()
+
+// Schedule purge at next midnight and also run a minute-based fallback
+function scheduleMidnightPurge(){
+  const now = new Date()
+  const next = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1, 0,0,2,0) // 2 seconds after midnight
+  const ms = next.getTime() - now.getTime()
+  setTimeout(()=>{ purgeOldExercises(); scheduleMidnightPurge() }, ms)
+}
+scheduleMidnightPurge()
+setInterval(()=>{ purgeOldExercises() }, 60*1000) // fallback every minute
 
 // Celebration messages and helper
 const celebrateEl = document.getElementById('celebrate')
